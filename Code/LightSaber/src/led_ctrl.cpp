@@ -15,6 +15,11 @@ void blitStrip(FrameBuffer frameBuffer)
     WS2812B.show();
 }
 
+void initStrip()
+{
+    WS2812B.begin();
+}
+
 void setBrightness(uint8_t b)
 {
     WS2812B.setBrightness(b);

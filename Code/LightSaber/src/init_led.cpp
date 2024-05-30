@@ -4,7 +4,7 @@
 #include "const.h"
 
 // blinks the led on the board
-void init_led()
+void initLedIndicator()
 {
     pinMode(LED_BUILTIN_PIN, OUTPUT);
     digitalWrite(LED_BUILTIN_PIN, HIGH);
