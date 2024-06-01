@@ -27,6 +27,12 @@ void setup()
 
     setBrightness(255);
 
+    addSaberProfile({0.3, 0xFF0000});
+    addSaberProfile({0.5, 0x00FF00});
+    addSaberProfile({0.6, 0x0000FF});
+    addSaberProfile({0.3, 0xFF00FF});
+    addSaberProfile({0.3, 0xff7f00});
+
     // auto gamma = [](Color c)
     // { return gammaCorrect(c, 1); };
     // generateBWLut(lut, gamma);
@@ -62,8 +68,10 @@ void draw()
 
     // sine(frameBuffer, 0xFF0000, 0.5, 1, (float)drawTime / 250, 0.01, true);
 
-    fillPartial(frameBuffer, 0xFF00ff, 1, 1 - getSaberState().extention / 2);
-    fillPartial(frameBuffer, 0xFF00ff, 0, getSaberState().extention / 2);
+    SaberProfile profile = getCurrentSaberProfile();
+
+    fillPartial(frameBuffer, profile.baseColor, 1, 1 - getSaberState().extention / 2);
+    fillPartial(frameBuffer, profile.baseColor, 0, getSaberState().extention / 2);
     // fill(frameBuffer, getSaberState().extention);
     // Serial.println(getSaberState().extention);j
 

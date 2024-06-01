@@ -5,6 +5,7 @@
 
 Adafruit_NeoPixel WS2812B = Adafruit_NeoPixel(LED_STRIP_COUNT, LED_STRIP_PIN, NEO_GRB + NEO_KHZ800);
 
+// TODO: Change this to use the FastLED library and find a way to just pass the frame buffer to the strip instead of having to call setPixelColor for each pixel
 void blitStrip(FrameBuffer frameBuffer)
 {
     for (int i = 0; i < LED_STRIP_COUNT; i++)

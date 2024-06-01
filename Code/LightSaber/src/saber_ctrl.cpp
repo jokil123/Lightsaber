@@ -4,9 +4,11 @@
 
 #include <Arduino.h>
 #include <memory>
+#include <vector>
 
 SaberState saberState;
-const float EXTENSION_DURATION = 0.5; // seconds
+int currentProfileIndex;
+std::vector<SaberProfile> profiles = std::vector<SaberProfile>();
 
 // Call this function to update the saber state
 void updateSaberState(float dt)
@@ -24,7 +26,13 @@ void updateSaberState(float dt)
         }
     }
 
-    saberState.extention += dt / EXTENSION_DURATION * saberState.extensionDirection;
+    // if button 1 is pressed switch to the next profile
+    if (getButton1() == HIGH)
+    {
+        activateSaberProfile((currentProfileIndex + 1) % profiles.size());
+    }
+
+    saberState.extention += dt / getCurrentSaberProfile().extensionDuration * saberState.extensionDirection;
 
     if (saberState.extention >= 1)
     {
@@ -42,4 +50,19 @@ void updateSaberState(float dt)
 SaberState &getSaberState()
 {
     return saberState;
+}
+
+void activateSaberProfile(int profileIndex)
+{
+    currentProfileIndex = profileIndex;
+}
+
+void addSaberProfile(SaberProfile profile)
+{
+    profiles.push_back(profile);
+}
+
+SaberProfile &getCurrentSaberProfile()
+{
+    return profiles[currentProfileIndex];
 }
