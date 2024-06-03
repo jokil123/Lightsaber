@@ -1,79 +1,53 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-#include "led_ctrl.h"
-#include "init_led.h"
+#include <LedBuiltin/ledBuiltin.h>
 
 #include <const.h>
-#include <strip_shaders.h>
-#include <mix.h>
 #include <util.h>
-#include <lut.h>
 #include <color.h>
-#include "saber_ctrl.h"
-#include <pushbuttons.h>
-
-void draw();
-BWLut lut;
+#include <hardware.h>
+#include <componentUpdater.h>
+#include <saberController.h>
+#include <MemoryFree.h>
 
 void setup()
 {
     Serial.begin(9600);
-
     initLedIndicator();
 
-    initStrip();
-    initPushButtons();
+    ComponentUpdater &compU = ComponentUpdater::getInstance();
 
-    setBrightness(255);
+    Hardware &hw = Hardware::getInstance();
+    compU.addComponent(&hw);
 
-    addSaberProfile({0.3, 0xFF0000});
-    addSaberProfile({0.5, 0x00FF00});
-    addSaberProfile({0.6, 0x0000FF});
-    addSaberProfile({0.3, 0xFF00FF});
-    addSaberProfile({0.3, 0xff7f00});
+    hw.ledStrip.setBrightness(255);
 
-    // auto gamma = [](Color c)
-    // { return gammaCorrect(c, 1); };
-    // generateBWLut(lut, gamma);
+    // This will leak memory
+    // Too bad!
+    ProfileManager *pm = new ProfileManager();
+    pm->addProfile({0.3, 0xFF0000});
+    pm->addProfile({0.5, 0x00FF00});
+    pm->addProfile({0.6, 0x0000FF});
+    pm->addProfile({0.3, 0xFF00FF});
+    pm->addProfile({0.3, 0xff7f00});
+    pm->addProfile({0.3, 0xff3300});
+    pm->addProfile({0.3, 0xffffff7});
 
-    // Serial.println(lutToString(lut));
+    // All of these will also leak memory!
+    StateManager *sm = new StateManager();
+    SaberRenderer *sr = new SaberRenderer();
+    SaberSynth *ss = new SaberSynth();
+
+    // In all honesty though it doesn't really matter as for this function to be executed twice you'd need to reset the device
+    SaberController *sc = new SaberController(*pm, *sm, *sr, *ss);
+    compU.addComponent(sc);
 
     Serial.print("\n");
     Serial.println("Setup done");
 }
 
-int lastFrameTime = 0;
-int lastUpdateTime = 0;
 void loop()
 {
-    float dt = (millis() - lastUpdateTime) / 1000.0;
-    lastUpdateTime = millis();
-
-    updateSaberState(dt);
-
-    if (millis() - lastFrameTime > 1000 / FRAME_RATE)
-    {
-        lastFrameTime = millis();
-        draw();
-    }
-}
-
-void draw()
-{
-    int drawTime = millis();
-    FrameBuffer frameBuffer;
-
-    fill(frameBuffer, 0x000000);
-
-    // sine(frameBuffer, 0xFF0000, 0.5, 1, (float)drawTime / 250, 0.01, true);
-
-    SaberProfile profile = getCurrentSaberProfile();
-
-    fillPartial(frameBuffer, profile.baseColor, 1, 1 - getSaberState().extention / 2);
-    fillPartial(frameBuffer, profile.baseColor, 0, getSaberState().extention / 2);
-    // fill(frameBuffer, getSaberState().extention);
-    // Serial.println(getSaberState().extention);j
-
-    blitStrip(frameBuffer);
+    ComponentUpdater::getInstance().updateAll();
 }

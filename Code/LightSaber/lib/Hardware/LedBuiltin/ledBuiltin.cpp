@@ -1,7 +1,7 @@
-#include "init_led.h"
+#include "ledBuiltin.h"
 
 #include <Arduino.h>
-#include "const.h"
+#include <pinout.h>
 
 // blinks the led on the board
 void initLedIndicator()
