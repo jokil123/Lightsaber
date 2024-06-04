@@ -11,10 +11,11 @@ Hardware &Hardware::getInstance()
     return instance;
 }
 
-Hardware::Hardware() : button0(BUTTON0_PIN), button1(BUTTON1_PIN), ledStrip(LED_STRIP_PIN, LED_STRIP_COUNT) { return; };
+Hardware::Hardware() : button0(BUTTON0_PIN), button1(BUTTON1_PIN), ledStrip(LED_STRIP_PIN, LED_STRIP_COUNT), gyroscope(GYRO_CS_PIN, GYRO_INT_PIN) { return; };
 
 void Hardware::update()
 {
     button0.update();
     button1.update();
+    gyroscope.update();
 }

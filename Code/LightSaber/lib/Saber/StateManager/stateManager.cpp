@@ -5,20 +5,10 @@
 
 SaberState &StateManager::update(SaberProfile &profile)
 {
-
     float dt = (micros() - lastUpdateTime) / 1000000.0f;
     lastUpdateTime = micros();
 
-    // Serial.print(">dt:");
-    // Serial.println(dt);
-
-    // Serial.print(">extention:");
-    // Serial.println(saberState.extention);
-
-    // Serial.print(">extensionDirection:");
-    // Serial.println(saberState.extensionDirection);
-
-    if (saberState.extensionDirection == 0 && Hardware::getInstance().button0.getKeyDown())
+    if (saberState.extensionDirection == 0 && (Hardware::getInstance().button0.getKeyDown() || abs(Hardware::getInstance().gyroscope.getTwist()) > 150))
     {
         if (saberState.extention == 0)
         {

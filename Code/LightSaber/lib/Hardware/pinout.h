@@ -10,3 +10,6 @@
 
 #define BUTTON0_PIN 34
 #define BUTTON1_PIN 35
+
+#define GYRO_CS_PIN 2
+#define GYRO_INT_PIN 2
