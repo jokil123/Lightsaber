@@ -10,6 +10,7 @@
 #include <componentUpdater.h>
 #include <saberController.h>
 #include <MemoryFree.h>
+#include <tuple>
 
 void setup()
 {
@@ -52,9 +53,18 @@ void loop()
 {
     ComponentUpdater::getInstance().updateAll();
 
-    Serial.print(">twist:");
-    Serial.println(Hardware::getInstance().gyroscope.getTwist());
+    // Serial.print(">twist:");
+    // Serial.println(Hardware::getInstance().gyroscope.getTwist());
 
-    Serial.print(">steve:");
-    Serial.println(Hardware::getInstance().gyroscope.getSteve());
+    // Serial.print(">steve:");
+    // Serial.println(Hardware::getInstance().gyroscope.getSteve());
+
+    Serial.print(">rx:");
+    Serial.println(std::get<0>(Hardware::getInstance().gyroscope.getOrientation()));
+
+    Serial.print(">ry:");
+    Serial.println(std::get<1>(Hardware::getInstance().gyroscope.getOrientation()));
+
+    Serial.print(">rz:");
+    Serial.println(std::get<2>(Hardware::getInstance().gyroscope.getOrientation()));
 }
