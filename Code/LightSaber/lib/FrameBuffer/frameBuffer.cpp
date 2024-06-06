@@ -28,7 +28,7 @@ void FrameBuffer::fillPartial(Color::Color color, float from, float to)
     int fromIndex = round((LED_STRIP_COUNT - 1) * from);
     int toIndex = round((LED_STRIP_COUNT - 1) * to);
 
-    for (int i = fromIndex; i <= toIndex; i++)
+    for (int i = fromIndex; i < toIndex; i++)
     {
         buffer[i] = color;
     }
