@@ -37,3 +37,8 @@ void ComponentUpdater::removeComponent(IUpdatingComponent *component)
         components.erase(it);
     }
 }
+
+std::vector<IUpdatingComponent *> &ComponentUpdater::getComponents()
+{
+    return components;
+}

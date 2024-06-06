@@ -7,7 +7,7 @@
 Gyroscope::Gyroscope(const int cs_pin, const int int_pin) : bmi160()
 {
     bmi160.begin(BMI160GenClass::SPI_MODE, Wire, cs_pin, int_pin);
-    // bmi160.getFIFOBytes m;
+    bmi160.setGyroRange(2000);
 }
 
 Gyroscope::~Gyroscope()
@@ -16,13 +16,13 @@ Gyroscope::~Gyroscope()
 
 void Gyroscope::update()
 {
-    int rate = bmi160.getGyroRange();
+    int range = bmi160.getGyroRange();
     int rawGx, rawGy, rawGz;
     bmi160.readGyro(rawGx, rawGy, rawGz);
 
-    gx = convertRawGyro(rawGx, rate);
-    gy = convertRawGyro(rawGy, rate);
-    gz = convertRawGyro(rawGz, rate);
+    gx = convertRawGyro(rawGx, range);
+    gy = convertRawGyro(rawGy, range);
+    gz = convertRawGyro(rawGz, range);
 
     float dt = (micros() - lastUpdateMicros) / 1000000.0f;
     lastUpdateMicros = micros();
@@ -32,9 +32,9 @@ void Gyroscope::update()
     rz += gz * dt;
 }
 
-float Gyroscope::convertRawGyro(int gRaw, int rate)
+float Gyroscope::convertRawGyro(int gRaw, int range)
 {
-    float g = (float)(gRaw * rate) / 32768.0;
+    float g = (float)(gRaw * range) / 32768.0;
     return g;
 }
 
@@ -47,6 +47,11 @@ void Gyroscope::resetOrientation()
 std::tuple<float, float, float> Gyroscope::getOrientation()
 {
     return std::make_tuple(rx, ry, rz);
+}
+
+std::tuple<float, float, float> Gyroscope::getAngularVelocity()
+{
+    return std::make_tuple(gx, gy, gz);
 }
 
 // gets the twist (angular roll speed gy) in deg/s

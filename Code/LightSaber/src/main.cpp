@@ -11,10 +11,14 @@
 #include <saberController.h>
 #include <MemoryFree.h>
 #include <tuple>
+#include <genericUtil.h>
+#include <Middleware/middleware.h>
+#include <stringFormat.h>
 
 void setup()
 {
     Serial.begin(9600);
+    Serial.print("\n");
     initLedIndicator();
 
     ComponentUpdater &compU = ComponentUpdater::getInstance();
@@ -22,49 +26,37 @@ void setup()
     Hardware &hw = Hardware::getInstance();
     compU.addComponent(&hw);
 
-    // hw.ledStrip.setBrightness(255);
+    hw.ledStrip.setBrightness(255);
 
-    // // This will leak memory
-    // // Too bad!
-    // ProfileManager *pm = new ProfileManager();
-    // pm->addProfile({0.3, 0xFF0000});
-    // pm->addProfile({0.5, 0x00FF00});
-    // pm->addProfile({0.6, 0x0000FF});
-    // pm->addProfile({0.3, 0xFF00FF});
-    // pm->addProfile({0.3, 0xff7f00});
-    // pm->addProfile({0.3, 0xff3300});
-    // pm->addProfile({0.3, 0xffffff});
-    // pm->addProfile({0.3, 0x010101});
+    Middleware &mw = Middleware::getInstance();
+    compU.addComponent(&mw);
 
-    // // All of these will also leak memory!
-    // StateManager *sm = new StateManager();
-    // SaberRenderer *sr = new SaberRenderer();
-    // SaberSynth *ss = new SaberSynth();
+    // This will leak memory
+    // Too bad!
+    ProfileManager *pm = new ProfileManager();
+    pm->addProfile({0.3, 0xFF0000});
+    pm->addProfile({0.5, 0x00FF00});
+    pm->addProfile({0.6, 0x0000FF});
+    pm->addProfile({0.3, 0xFF00FF});
+    pm->addProfile({0.3, 0xff7f00});
+    pm->addProfile({0.3, 0xff3300});
+    pm->addProfile({0.3, 0xffffff});
+    pm->addProfile({0.3, 0x010101});
 
-    // // In all honesty though it doesn't really matter as for this function to be executed twice you'd need to reset the device
-    // SaberController *sc = new SaberController(*pm, *sm, *sr, *ss);
-    // compU.addComponent(sc);
+    // All of these will also leak memory!
+    StateManager *sm = new StateManager();
+    SaberRenderer *sr = new SaberRenderer();
+    SaberSynth *ss = new SaberSynth();
 
-    // Serial.print("\n");
-    // Serial.println("Setup done");
+    // In all honesty though it doesn't really matter as for this function to be executed twice you'd need to reset the device
+    SaberController *sc = new SaberController(*pm, *sm, *sr, *ss);
+    compU.addComponent(sc);
+
+    printFormat("Mounted %d Components", compU.getComponents().size());
+    Serial.println("Setup done");
 }
 
 void loop()
 {
     ComponentUpdater::getInstance().updateAll();
-
-    // Serial.print(">twist:");
-    // Serial.println(Hardware::getInstance().gyroscope.getTwist());
-
-    // Serial.print(">steve:");
-    // Serial.println(Hardware::getInstance().gyroscope.getSteve());
-
-    Serial.print(">rx:");
-    Serial.println(std::get<0>(Hardware::getInstance().gyroscope.getOrientation()));
-
-    Serial.print(">ry:");
-    Serial.println(std::get<1>(Hardware::getInstance().gyroscope.getOrientation()));
-
-    Serial.print(">rz:");
-    Serial.println(std::get<2>(Hardware::getInstance().gyroscope.getOrientation()));
 }

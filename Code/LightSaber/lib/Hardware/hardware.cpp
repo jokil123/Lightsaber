@@ -4,6 +4,7 @@
 
 #include <LedStrip/ledStrip.h>
 #include <Pushbutton/pushbutton.h>
+#include <Middleware/middleware.h>
 
 Hardware &Hardware::getInstance()
 {
@@ -11,7 +12,7 @@ Hardware &Hardware::getInstance()
     return instance;
 }
 
-Hardware::Hardware() : button0(BUTTON0_PIN), button1(BUTTON1_PIN), ledStrip(LED_STRIP_PIN, LED_STRIP_COUNT), gyroscope(GYRO_CS_PIN, GYRO_INT_PIN) { return; };
+Hardware::Hardware() : button0(BUTTON0_PIN), button1(BUTTON1_PIN), ledStrip(LED_STRIP_PIN, LED_STRIP_COUNT), gyroscope(GYRO_CS_PIN, GYRO_INT_PIN){};
 
 void Hardware::update()
 {

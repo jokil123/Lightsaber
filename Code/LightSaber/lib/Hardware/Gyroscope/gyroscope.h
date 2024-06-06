@@ -21,9 +21,11 @@ public:
     ~Gyroscope();
     void update();
 
-    void resetOrientation(); // Resets the orientation back to 0, 0, 0
+    // Resets the orientation back to 0, 0, 0
+    void resetOrientation();
     std::tuple<float, float, float> getOrientation();
 
+    std::tuple<float, float, float> getAngularVelocity();
     float getTwist();
     float getSteve();
 };

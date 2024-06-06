@@ -2,13 +2,16 @@
 
 #include <Arduino.h>
 #include <hardware.h>
+#include <Middleware/middleware.h>
 
 SaberState &StateManager::update(SaberProfile &profile)
 {
     float dt = (micros() - lastUpdateTime) / 1000000.0f;
     lastUpdateTime = micros();
 
-    if (saberState.extensionDirection == 0 && (Hardware::getInstance().button0.getKeyDown() || abs(Hardware::getInstance().gyroscope.getTwist()) > 150))
+    bool activationButtonPressed = Middleware::getInstance().twistActivator.getActivated() || Hardware::getInstance().button0.getKeyDown();
+
+    if (saberState.extensionDirection == 0 && activationButtonPressed)
     {
         if (saberState.extention == 0)
         {

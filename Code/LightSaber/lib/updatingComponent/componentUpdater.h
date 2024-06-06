@@ -14,4 +14,5 @@ public:
     void updateAll();
     void addComponent(IUpdatingComponent *component);
     void removeComponent(IUpdatingComponent *component);
+    std::vector<IUpdatingComponent *> &getComponents();
 };

@@ -6,13 +6,8 @@ void SaberRenderer::update(SaberProfile &profile, SaberState &state)
 {
     if (micros() - lastFrameAt > 1000000.0f / FRAME_RATE)
     {
-        // Serial.print(">Time since last frame:");
-        // Serial.println(micros() - lastFrameAt);
-
         lastFrameAt = micros();
 
-        // Serial.print(">Extension:");
-        // Serial.println(state.extention);
         render(profile, state);
     }
 }
